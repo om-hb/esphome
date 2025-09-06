@@ -38,7 +38,7 @@ CONF_PING_PONG_ENABLE = "ping_pong_enable"
 CONF_PING_PONG_RECYCLE_TIME = "ping_pong_recycle_time"
 CONF_ROLLING_CODE_ENABLE = "rolling_code_enable"
 CONF_TRANSPORT_ID = "transport_id"
-
+CONF_TRANSMIT_ON_CHANGE = "transmit_on_change"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -110,6 +110,7 @@ TRANSPORT_SCHEMA = (
                 sensor_validation(BinarySensor)
             ),
             cv.Optional(CONF_PROVIDERS, default=[]): cv.ensure_list(PROVIDER_SCHEMA),
+            cv.Optional(CONF_TRANSMIT_ON_CHANGE, default=True): cv.boolean,
         },
     )
     .extend(ENCRYPTION_SCHEMA)
@@ -168,6 +169,7 @@ async def register_packet_transport(var, config):
             config[CONF_PING_PONG_RECYCLE_TIME].total_seconds
         )
     )
+    cg.add(var.set_transmit_on_change(config[CONF_TRANSMIT_ON_CHANGE]))
     # Get directly configured providers, plus those from sensors and binary sensors
     providers = {
         sensor[CONF_PROVIDER] for sensor in get_sensors(config[CONF_ID])

@@ -98,6 +98,7 @@ class PacketTransport : public PollingComponent {
   void set_provider_encryption(const char *name, std::vector<uint8_t> key) {
     this->providers_[name].encryption_key = std::move(key);
   }
+  void set_transmit_on_change(bool transmit) { this->transmit_on_change_ = transmit; }
 #ifdef USE_STATUS_SENSOR
   void set_provider_status_sensor(const char *name, binary_sensor::BinarySensor *sensor) {
     this->providers_[name].status_sensor = sensor;
@@ -135,6 +136,7 @@ class PacketTransport : public PollingComponent {
 
   std::vector<uint8_t> encryption_key_{};
 
+  bool transmit_on_change_{true};
 #ifdef USE_SENSOR
   std::vector<Sensor> sensors_{};
   std::map<std::string, std::map<std::string, sensor::Sensor *>> remote_sensors_{};

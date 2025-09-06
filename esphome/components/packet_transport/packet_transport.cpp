@@ -214,16 +214,20 @@ void PacketTransport::setup() {
 #ifdef USE_SENSOR
   for (auto &sensor : this->sensors_) {
     sensor.sensor->add_on_state_callback([this, &sensor](float x) {
-      this->updated_ = true;
       sensor.updated = true;
+      if (this->transmit_on_change_) {
+        this->updated_ = true;
+      }
     });
   }
 #endif
 #ifdef USE_BINARY_SENSOR
   for (auto &sensor : this->binary_sensors_) {
     sensor.sensor->add_on_state_callback([this, &sensor](bool value) {
-      this->updated_ = true;
       sensor.updated = true;
+      if (this->transmit_on_change_) {
+        this->updated_ = true;
+      }
     });
   }
 #endif
@@ -532,6 +536,7 @@ void PacketTransport::dump_config() {
     for (const auto &sensor : this->remote_binary_sensors_[host.first.c_str()])
       ESP_LOGCONFIG(TAG, "    Binary Sensor: %s", sensor.first.c_str());
 #endif
+ESP_LOGCONFIG(TAG, "  Transmit on change: %s", YESNO(this->transmit_on_change_));
   }
 }
 void PacketTransport::increment_code_() {
