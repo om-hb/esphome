@@ -131,12 +131,12 @@ class PacketTransport : public PollingComponent {
   uint32_t last_key_time_{};
   bool resend_ping_key_{};
   bool resend_data_{};
+  bool transmit_on_change_{true};
   const char *name_{};
   ESPPreferenceObject pref_{};
 
   std::vector<uint8_t> encryption_key_{};
 
-  bool transmit_on_change_{true};
 #ifdef USE_SENSOR
   std::vector<Sensor> sensors_{};
   std::map<std::string, std::map<std::string, sensor::Sensor *>> remote_sensors_{};
